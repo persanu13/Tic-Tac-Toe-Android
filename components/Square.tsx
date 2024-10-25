@@ -23,7 +23,7 @@ export default function Square({
     if (value === PlayerType.X) {
       return (
         <Image
-          style={{ flex: 1 }}
+          style={{ flex: 1, width: "100%" }}
           resizeMode="center"
           source={require(`../assets/images/x.png`)}
         ></Image>
@@ -31,7 +31,7 @@ export default function Square({
     } else {
       return (
         <Image
-          style={{ flex: 1 }}
+          style={{ flex: 1, width: "100%" }}
           resizeMode="center"
           source={require(`../assets/images/o.png`)}
         ></Image>

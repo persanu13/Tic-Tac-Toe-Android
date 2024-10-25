@@ -1,6 +1,7 @@
-import { useRouter, Link } from "expo-router";
+import { Link } from "expo-router";
 import { View, Text, Image, Button } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import Icon from "react-native-vector-icons/Ionicons";
 import React, { useState, useRef } from "react";
 
 import { styles } from "@/constants/Style";
@@ -10,11 +11,12 @@ import { useGameContext } from "@/context/gameContext";
 import { TicTacToeLogic, Point, PlayerType } from "@/logic/game";
 
 import Square from "@/components/Square";
+import MyButton from "@/components/MyButton";
 
 export default function GameScreen() {
   const { gameState } = useGameContext();
   const gameLogic = useRef(
-    new TicTacToeLogic(gameState.tableSize, PlayerType.X)
+    new TicTacToeLogic(gameState.tableSize, gameState.firstPlayer)
   );
 
   const [table, setTable] = useState<PlayerType[][]>(
@@ -56,8 +58,16 @@ export default function GameScreen() {
     <SafeAreaView style={styles.body}>
       <View style={styles.gameContainer}>
         <View style={styles.table}>{renderTable}</View>
+        <Link href="/playerType" style={styles.gameBackLink}>
+          <Icon name="arrow-back-circle-outline" style={styles.backArrow} />
+        </Link>
+        <MyButton
+          text="Reset"
+          buttonStyle={styles.button}
+          textStyle={styles.buttonText}
+          handlePress={reset}
+        ></MyButton>
       </View>
-      <Button title="Reset" onPress={reset}></Button>
     </SafeAreaView>
   );
 }

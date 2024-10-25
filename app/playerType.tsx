@@ -1,51 +1,63 @@
 import { useRouter, Link } from "expo-router";
-import { View, Text, StyleSheet, StatusBar, Image, Button } from "react-native";
+import { View, Text, StatusBar, Image, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/Ionicons";
 import { styles } from "@/constants/Style";
 
-import MyButton from "@/components/MyButton";
 import { useGameContext } from "@/context/gameContext";
 
-export default function gameModeScreen() {
-  const { gameState, setTableSize } = useGameContext();
+import { PlayerType } from "@/logic/game";
 
-  const handlePress = (size: number) => {
-    setTableSize(size);
+export default function gameModeScreen() {
+  const { setFirstPlayer } = useGameContext();
+  const router = useRouter();
+
+  const handlePress = (firstPlayer: PlayerType) => {
+    setFirstPlayer(firstPlayer);
+    router.push("/gamePage");
   };
   return (
     <SafeAreaView style={styles.body}>
       <StatusBar hidden={true} />
       <Image
-        style={styles.image}
+        style={styles.backroundImage}
         resizeMode="cover"
         source={require("../assets/images/background_image.png")}
       />
 
       <View style={styles.container}>
-        <View style={{ flexDirection: "row", position: "relative" }}>
-          <Link href="/gameMode" style={{ position: "absolute", left: -35 }}>
-            <Icon
-              name="arrow-back-circle-outline"
-              size={30}
-              style={{ color: "red" }}
-            />
+        <View style={styles.stepContainer}>
+          <Link href="/gameMode" style={styles.backLink}>
+            <Icon name="arrow-back-circle-outline" style={styles.backArrow} />
           </Link>
-          <Text style={styles.step}>Step 1: choose field mode</Text>
+          <Text style={styles.step}>Step 3: choose start player</Text>
         </View>
-        <MyButton
-          text="X"
-          buttonStyle={styles.button}
-          textStyle={styles.buttonText}
-          handlePress={() => {
-            handlePress(3);
-          }}
-        ></MyButton>
-        <MyButton
-          text="O"
-          buttonStyle={styles.button}
-          textStyle={styles.buttonText}
-        ></MyButton>
+        <View style={styles.rowContainer}>
+          <TouchableOpacity
+            style={styles.letterButton}
+            onPress={() => {
+              handlePress(PlayerType.X);
+            }}
+          >
+            <Image
+              style={styles.letterImage}
+              resizeMode="center"
+              source={require(`../assets/images/x.png`)}
+            ></Image>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.letterButton}
+            onPress={() => {
+              handlePress(PlayerType.O);
+            }}
+          >
+            <Image
+              style={styles.letterImage}
+              resizeMode="center"
+              source={require(`../assets/images/o.png`)}
+            ></Image>
+          </TouchableOpacity>
+        </View>
       </View>
     </SafeAreaView>
   );

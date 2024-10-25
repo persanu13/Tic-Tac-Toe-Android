@@ -1,17 +1,18 @@
 import React, { createContext, useState, useContext, ReactNode } from "react";
+import { GameMode, PlayerType } from "@/logic/game";
 
 type gameType = {
   tableSize: number;
-  mode: string;
-  playerType: string;
+  mode: GameMode;
+  firstPlayer: PlayerType;
 };
 
 // 1. Definirea tipului pentru context (stare și funcții)
 interface IGameContext {
   gameState: gameType;
   setTableSize: (tableSize: number) => void;
-  setMode: (mode: string) => void;
-  setPlayerType: (playerType: string) => void;
+  setMode: (mode: GameMode) => void;
+  setFirstPlayer: (playerType: PlayerType) => void;
 }
 
 // 2. Inițializarea contextului (cu `undefined` la început pentru a obliga folosirea în interiorul provider-ului)
@@ -20,9 +21,9 @@ const GameContext = createContext<IGameContext | undefined>(undefined);
 // 3. Definirea provider-ului
 export function GameProvider({ children }: { children: ReactNode }) {
   const [gameState, setGameState] = useState<gameType>({
-    tableSize: 5,
-    mode: "",
-    playerType: "",
+    tableSize: 0,
+    mode: GameMode.None,
+    firstPlayer: PlayerType.None,
   });
   const setTableSize = (newTableSize: number) => {
     setGameState((prevState) => ({
@@ -31,23 +32,23 @@ export function GameProvider({ children }: { children: ReactNode }) {
     }));
   };
 
-  const setMode = (newMode: string) => {
+  const setMode = (newMode: GameMode) => {
     setGameState((prevState) => ({
       ...prevState,
       mode: newMode,
     }));
   };
 
-  const setPlayerType = (newPlayerType: string) => {
+  const setFirstPlayer = (newFirstPlayer: PlayerType) => {
     setGameState((prevState) => ({
       ...prevState,
-      playerType: newPlayerType,
+      firstPlayer: newFirstPlayer,
     }));
   };
 
   return (
     <GameContext.Provider
-      value={{ gameState, setTableSize, setMode, setPlayerType }}
+      value={{ gameState, setTableSize, setMode, setFirstPlayer }}
     >
       {children}
     </GameContext.Provider>

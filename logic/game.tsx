@@ -4,6 +4,12 @@ export enum PlayerType {
   None,
 }
 
+export enum GameMode {
+  SinglePlayer,
+  MultiPlayer,
+  None,
+}
+
 export type Point = {
   x: number;
   y: number;
@@ -28,6 +34,7 @@ export class TicTacToeLogic {
   private player2: PlayerType;
   private currentPlayer: PlayerType;
   private gameEnd: boolean;
+  private moveCount: number;
 
   constructor(tableSize: number, firstPlayer: PlayerType) {
     this.table = new Array(tableSize)
@@ -37,6 +44,7 @@ export class TicTacToeLogic {
     this.player2 = firstPlayer === PlayerType.X ? PlayerType.O : PlayerType.X;
     this.currentPlayer = this.player1;
     this.gameEnd = false;
+    this.moveCount = 0;
   }
   // Metodă privată
 
@@ -92,6 +100,8 @@ export class TicTacToeLogic {
       }
       if (count >= countTo) return true;
     }
+
+    if (this.isDrawn()) return true;
     return false;
   }
 
@@ -100,6 +110,7 @@ export class TicTacToeLogic {
     if (this.table[point.y][point.x] != PlayerType.None) return false;
     if (this.gameEnd) return false;
     this.table[point.y][point.x] = this.currentPlayer;
+    this.moveCount++;
     this.switchPlayer();
     this.gameEnd = this.isGameEnd(point);
     return true;
@@ -108,9 +119,13 @@ export class TicTacToeLogic {
     this.table = new Array(this.table.length)
       .fill(null)
       .map(() => new Array(this.table.length).fill(PlayerType.None));
-
+    this.moveCount = 0;
     this.currentPlayer = this.player1;
     this.gameEnd = false;
+  }
+
+  public isDrawn(): boolean {
+    return this.moveCount == this.table.length * this.table.length;
   }
 
   public getGameEnd(): boolean {
